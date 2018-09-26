@@ -1,0 +1,98 @@
+-----------------------------------------------------------------------
+ ------ Informatics 2D - 2017/18 - Second Assignment - Planning ------
+-----------------------------------------------------------------------
+
+ Write your matriculation number here (your name is not needed)
+ Matriculation Number: s1674417
+
+
+
+1.1
+Adjacent(x,y) - true iff x and y are locations and x is adjacent to y
+
+1.2
+At(x,loc) - true iff x is an agent, glass or customer and x is at location loc
+
+1.3
+FullGlass(g) - true iff g is a glass and glass g is full of beer
+
+1.4
+IsServed(c) - true iff customer c has been served
+
+1.5
+Initial State:
+Adjacent(UB,MB) ∧ Adjacent(MB,LB) ∧ Adjacent(LB,LF) ∧ Adjacent(LF, MF) ∧ Adjacent(MF, UF) ∧ Adjacent(UF, BAR)
+
+At(agent,BAR)
+At(glass,BAR)
+At(c1,LB)
+
+1.6
+Action: PickUp  :parameters ( ?g - glass ?loc - location)
+Description: The agent can pick up a glass
+Precondition: ¬ Holding(g) ∧ ¬ FullGlass(g) ∧ At(g, loc) ∧ At( Agent, loc)
+Effect: Holding(g) 
+
+1.7
+Action: HandOver :parameters ( ?c - customer ?loc -location ?g - glass )
+Description: Handover a glass of beer to a customer c that is at location x
+Precondition: At(Agent,loc) ∧ At(c,loc) ∧ Holding(g) ∧ FullGlass(g) ∧ ¬ IsServed(C) 
+Effect: IsServed(c) ∧ ¬ Holding(g)
+
+
+1.8
+Action: Pour :parameters (?g)
+Description: the agent can Pour beer into a glass
+Precondition: At(agent,BAR) ∧ Holding(glass) ∧ ¬ FullGlass(g) 
+Effect: FullGlass(glass)
+
+1.9
+Action: Move  :parameters (?x ?y)
+Description: Agent moves from current location x to an adjacent location y
+Precondition: At(Agent,x) ∧ Adjacent(x,y) 
+Effect: ¬ At(Agent,x)  ∧ At(agent,y) 
+
+1.10
+
+Initial State: At(Agent,BAR) ∧ At(g,BAR) ∧ ¬ FullGlass(g) ∧ At(C,UF) ∧ ¬ IsServed(C) ∧ ¬ Holding(g) ∧  Adjacent(BAR, UF) ∧ Adjacent(UF , BAR)
+
+Goal State: IsServed(C) 
+
+PLAN using Backward State Space Search:
+
+Goal State: IsServed(C) 
+
+1.
+Action: HandOver(C,UF)
+Precondition: At(Agent,UF) ∧ At(C,UF) ∧ Holding(g) ∧ FullGlass(g) ∧ ¬ IsServed(C) ∧ ¬ At(Agent,BAR)
+Effect: IsServed(C)
+
+UpdatedGoal: At(C,UF) ∧ At(Agent,UF) ∧ At(C,UF) ∧ Holding(g) ∧ FullGlass(g) ∧ ¬ IsServed(C) ∧ ¬ At(Agent,BAR)
+
+2.
+Action: Move(BAR,UF)
+Precondition: At(Agent,BAR) ∧ Adjacent(BAR, UF)
+Effect: ¬ At(Agent,BAR)  ∧ At(agent,UF) 
+
+UpdatedGoal: At(C,UF) ∧ At(Agent,BAR) ∧ Adjacent(BAR, UF) ∧ At(C,UF) ∧ Holding(g) ∧ FullGlass(g) ∧ ¬ IsServed(C)
+
+3.
+Action: Pour(g)
+Precondition: At(agent,BAR) ∧ Holding(g) ∧ ¬ FullGlass(g) ∧  At(g,BAR)
+Effect: FullGlass(g)
+
+UpdatedGoal: At(C,UF) ∧ At(Agent,BAR) ∧ Adjacent(BAR, UF) ∧ Holding(g) ∧ ¬ FullGlass(g) ∧ At(g,BAR) ∧ ¬ IsServed(C)
+
+4.
+Action: PickUp(g)
+Precondition: ¬ Holding(g) ∧ ¬ FullGlass(g)
+Effect: Holding(g) 
+
+UpdatedGoal: At(C,UF) ∧ At(Agent,BAR) ∧ Adjacent(BAR, UF) ∧ ¬ Holding(g) ∧ ¬ FullGlass(g) ∧ At(g,BAR) ∧ ¬ IsServed(C)
+
+
+
+
+--------------------
+Answers to parts 2 and 3 should be included in the appropriate
+*-template.pddl files.
